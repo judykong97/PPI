@@ -15,13 +15,12 @@ namespace Testbed_Demo
 {
     public sealed partial class MainPage : Page
     {
-        Dictionary<uint, Windows.UI.Xaml.Input.Pointer> pointers;
-        PPIHandler handler = new PPIHandler();
+        PPIHandler handler;
 
         public MainPage()
         {
             this.InitializeComponent();
-            pointers = new Dictionary<uint, Windows.UI.Xaml.Input.Pointer>();
+            this.handler = new PPIHandler(this);
 
             /*
             PointerPressed += new PointerEventHandler(TouchDown);
@@ -33,8 +32,9 @@ namespace Testbed_Demo
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
+            handler.onTouchDown(e);
+            // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
-            handler.onTouchDown(e, ptrPt);
             DrawEllipse(handler.GetTouchOval(ptrPt));
             CreateInfoPop(handler.GetTouchOval(ptrPt), ptrPt);
         }
@@ -42,23 +42,26 @@ namespace Testbed_Demo
 
         protected override void OnPointerMoved(PointerRoutedEventArgs e)
         {
+            handler.onTouchMove(e);
+            // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
-            handler.onTouchMove(e, ptrPt);
             DrawEllipse(handler.GetTouchOval(ptrPt));
             UpdateInfoPop(handler.GetTouchOval(ptrPt), ptrPt);
         }
 
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
+            handler.onTouchUp(e);
+            // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
-            handler.onTouchUp(e, ptrPt);
             DestroyInfoPop(ptrPt);
         }
 
         protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
         {
+            handler.onTouchUp(e);
+            // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
-            handler.onTouchUp(e, ptrPt);
             DestroyInfoPop(ptrPt);
         }
 

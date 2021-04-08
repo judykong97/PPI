@@ -44,6 +44,7 @@ namespace PPI
 
     public class PPIHandler
     {
+        Page captureFrom = null;
         Dictionary<uint, Windows.UI.Xaml.Input.Pointer> pointers;
         List<PPITouchPointOval> ovals = new List<PPITouchPointOval>();
 
@@ -60,6 +61,12 @@ namespace PPI
             pointers = new Dictionary<uint, Windows.UI.Xaml.Input.Pointer>();
         }
 
+        public PPIHandler(Page captureFrom)
+        {
+            pointers = new Dictionary<uint, Windows.UI.Xaml.Input.Pointer>();
+            this.captureFrom = captureFrom;
+        }
+
         // This seems right, but again I didn't find any useful documentation on it
         // and the "5" was a random value of my guess based on pattern matching
         private double UnitToPixel(double val)
@@ -72,28 +79,40 @@ namespace PPI
             return val * SCREENWIDTH_MM / SCREENWIDTH_PX;
         }
 
-        public void onTouchDown(PointerRoutedEventArgs e, PointerPoint ptrPt)
+        public void onTouchDown(PointerRoutedEventArgs e)
         {
+            PointerPoint ptrPt = e.GetCurrentPoint(captureFrom);
             if (!pointers.ContainsKey(ptrPt.PointerId))
             {
                 pointers[ptrPt.PointerId] = e.Pointer;
             }
             PPITouchPointOval oval = GetTouchOval(ptrPt);
-            oval.Type = "Down";
-            ovals.Add(oval);
+            if (oval != null)
+            {
+                oval.Type = "Down";
+                ovals.Add(oval);
+            }
         }
 
-        public void onTouchMove(PointerRoutedEventArgs e, PointerPoint ptrPt) {
+        public void onTouchMove(PointerRoutedEventArgs e) {
+            PointerPoint ptrPt = e.GetCurrentPoint(captureFrom);
             PPITouchPointOval oval = GetTouchOval(ptrPt);
-            oval.Type = "Move";
-            ovals.Add(oval);
+            if (oval != null)
+            {
+                oval.Type = "Move";
+                ovals.Add(oval);
+            }
         }
 
-        public void onTouchUp(PointerRoutedEventArgs e, PointerPoint ptrPt)
+        public void onTouchUp(PointerRoutedEventArgs e)
         {
+            PointerPoint ptrPt = e.GetCurrentPoint(captureFrom);
             PPITouchPointOval oval = GetTouchOval(ptrPt);
-            oval.Type = "Up";
-            ovals.Add(oval);
+            if (oval != null)
+            {
+                oval.Type = "Up";
+                ovals.Add(oval);
+            }
             if (pointers.ContainsKey(ptrPt.PointerId))
             {
                 pointers[ptrPt.PointerId] = null;
