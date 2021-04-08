@@ -172,8 +172,8 @@ namespace PPI
                         details += "\nCenterX: " + oval.CenterX;
                         details += "\nCenterY: " + oval.CenterX;
                         details += "\nAngle: " + oval.Angle;
-                        details += "\nMajorAxis (mm): " + PixelToMM(oval.MajorAxis);
-                        details += "\nMinorAxis (mm): " + PixelToMM(oval.MinorAxis);
+                        details += "\nMajorAxis: " + PixelToMM(oval.MajorAxis);
+                        details += "\nMinorAxis: " + PixelToMM(oval.MinorAxis);
                         details += "\nContactArea: " + oval.ContactArea;
                         details += "\nTime: " + oval.Time;
                     }
@@ -182,9 +182,12 @@ namespace PPI
 
                         details += "\nTouch Data: " + ptrPt.Properties.GetUsageValue(ptrPt.PointerDevice.SupportedUsages[i].UsagePage,
                             ptrPt.PointerDevice.SupportedUsages[i].Usage) * ptrPt.PointerDevice.SupportedUsages[i].PhysicalMultiplier;
-                        details += " UsagePage = " + ptrPt.PointerDevice.SupportedUsages[i].UsagePage + ", UsageID = " + ptrPt.PointerDevice.SupportedUsages[i].Usage;
-                        details += " PhysicalMultiplier = " + ptrPt.PointerDevice.SupportedUsages[i].PhysicalMultiplier;
-                        details += " Unit = " + ptrPt.PointerDevice.SupportedUsages[i].Unit;
+                        // Information regarding the HID configuration
+                        details += ", UsagePage = " + ptrPt.PointerDevice.SupportedUsages[i].UsagePage;
+                        details += ", UsageID = " + ptrPt.PointerDevice.SupportedUsages[i].Usage;
+                        // Provided by the HID to translate raw sensor data to Unit
+                        details += ", PhysicalMultiplier = " + ptrPt.PointerDevice.SupportedUsages[i].PhysicalMultiplier;
+                        details += ", Unit = " + ptrPt.PointerDevice.SupportedUsages[i].Unit;
                     }
                     break;
                 default:
