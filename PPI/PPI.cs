@@ -23,6 +23,7 @@ namespace PPI
         public double MinorAxis;
         public double ContactArea; // Calculated from major and minor axes
         public long Time;
+        public String Type;
 
         public PPITouchPointOval(double x, double y, double angle, double majorAxis, double minorAxis, long time)
         {
@@ -78,17 +79,20 @@ namespace PPI
                 pointers[ptrPt.PointerId] = e.Pointer;
             }
             PPITouchPointOval oval = GetTouchOval(ptrPt);
+            oval.Type = "Down";
             ovals.Add(oval);
         }
 
         public void onTouchMove(PointerRoutedEventArgs e, PointerPoint ptrPt) {
             PPITouchPointOval oval = GetTouchOval(ptrPt);
+            oval.Type = "Move";
             ovals.Add(oval);
         }
 
         public void onTouchUp(PointerRoutedEventArgs e, PointerPoint ptrPt)
         {
             PPITouchPointOval oval = GetTouchOval(ptrPt);
+            oval.Type = "Up";
             ovals.Add(oval);
             if (pointers.ContainsKey(ptrPt.PointerId))
             {
