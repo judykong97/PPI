@@ -30,13 +30,13 @@
     <AppXManifest Include="C:\Users\baboo\Documents\testbed\Testbed Demo\Testbed Demo\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2021-04-08T06:07:50.056</Modified>
+      <Modified>2021-04-08T22:54:46.439</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\baboo\Documents\testbed\Testbed Demo\Testbed Demo\bin\x86\Debug\Testbed Demo.exe">
       <PackagePath>entrypoint\Testbed Demo.exe</PackagePath>
-      <Modified>2021-04-08T06:07:49.492</Modified>
+      <Modified>2021-04-08T22:54:46.040</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\UWPNuGetPackages\runtime.win10-x86.microsoft.netcore.universalwindowsplatform\6.2.10\runtimes\win10-x86\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
@@ -44,7 +44,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\baboo\Documents\testbed\Testbed Demo\PPI\bin\x86\Debug\PPI.dll">
       <PackagePath>PPI.dll</PackagePath>
-      <Modified>2021-04-08T06:07:23.849</Modified>
+      <Modified>2021-04-08T22:54:42.507</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\bin\10.0.18362.0\XamlCompiler\Microsoft.UI.Xaml.Markup.winmd">
       <PackagePath>Microsoft.UI.Xaml.Markup.winmd</PackagePath>
@@ -94,11 +94,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\baboo\Documents\testbed\Testbed Demo\Testbed Demo\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2021-04-08T06:07:49.446</Modified>
+      <Modified>2021-04-08T22:54:45.982</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\baboo\Documents\testbed\Testbed Demo\Testbed Demo\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2021-04-08T06:07:49.446</Modified>
+      <Modified>2021-04-08T22:54:45.982</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.18362.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -110,7 +110,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\baboo\Documents\testbed\Testbed Demo\Testbed Demo\bin\x86\Debug\Core\Testbed Demo.exe">
       <PackagePath>Testbed Demo.exe</PackagePath>
-      <Modified>2021-04-08T06:07:50.052</Modified>
+      <Modified>2021-04-08T22:54:46.434</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

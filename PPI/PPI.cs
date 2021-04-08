@@ -16,6 +16,7 @@ namespace PPI
 
     public class PPITouchPointOval
     {
+        public uint Id; 
         public double CenterX;
         public double CenterY;
         public double Angle;
@@ -25,8 +26,9 @@ namespace PPI
         public long Time;
         public String Type;
 
-        public PPITouchPointOval(double x, double y, double angle, double majorAxis, double minorAxis, long time)
+        public PPITouchPointOval(uint id, double x, double y, double angle, double majorAxis, double minorAxis, long time, String type)
         {
+            this.Id = id;
             this.CenterX = x;
             this.CenterY = y;
             this.Angle = angle;
@@ -34,6 +36,7 @@ namespace PPI
             this.MinorAxis = minorAxis;
             this.ContactArea = Math.PI * majorAxis * minorAxis;
             this.Time = time;
+            this.Type = type;
         }
     }
 
@@ -45,8 +48,8 @@ namespace PPI
     public class PPIHandler
     {
         Page captureFrom = null;
-        Dictionary<uint, Windows.UI.Xaml.Input.Pointer> pointers;
-        List<PPITouchPointOval> ovals = new List<PPITouchPointOval>();
+        HashSet<uint> touchIds; // Store to deal with multiple touches
+        List<PPITouchPointOval> ovals;
 
         int SCREENHEIGHT_MM = 742;
         int SCREENWIDTH_MM = 1319;
@@ -58,12 +61,14 @@ namespace PPI
 
         public PPIHandler()
         {
-            pointers = new Dictionary<uint, Windows.UI.Xaml.Input.Pointer>();
+            touchIds = new HashSet<uint>();
+            ovals = new List<PPITouchPointOval>();
         }
 
         public PPIHandler(Page captureFrom)
         {
-            pointers = new Dictionary<uint, Windows.UI.Xaml.Input.Pointer>();
+            touchIds = new HashSet<uint>();
+            ovals = new List<PPITouchPointOval>();
             this.captureFrom = captureFrom;
         }
 
@@ -82,24 +87,22 @@ namespace PPI
         public void onTouchDown(PointerRoutedEventArgs e)
         {
             PointerPoint ptrPt = e.GetCurrentPoint(captureFrom);
-            if (!pointers.ContainsKey(ptrPt.PointerId))
-            {
-                pointers[ptrPt.PointerId] = e.Pointer;
-            }
-            PPITouchPointOval oval = GetTouchOval(ptrPt);
+            PPITouchPointOval oval = GetTouchOval(ptrPt, "Down");
             if (oval != null)
             {
-                oval.Type = "Down";
                 ovals.Add(oval);
+            }
+            if (!touchIds.Contains(ptrPt.PointerId))
+            {
+                touchIds.Add(ptrPt.PointerId);
             }
         }
 
         public void onTouchMove(PointerRoutedEventArgs e) {
             PointerPoint ptrPt = e.GetCurrentPoint(captureFrom);
-            PPITouchPointOval oval = GetTouchOval(ptrPt);
+            PPITouchPointOval oval = GetTouchOval(ptrPt, "Move");
             if (oval != null)
             {
-                oval.Type = "Move";
                 ovals.Add(oval);
             }
         }
@@ -107,25 +110,24 @@ namespace PPI
         public void onTouchUp(PointerRoutedEventArgs e)
         {
             PointerPoint ptrPt = e.GetCurrentPoint(captureFrom);
-            PPITouchPointOval oval = GetTouchOval(ptrPt);
+            PPITouchPointOval oval = GetTouchOval(ptrPt, "Up");
             if (oval != null)
             {
-                oval.Type = "Up";
                 ovals.Add(oval);
             }
-            if (pointers.ContainsKey(ptrPt.PointerId))
+            if (touchIds.Contains(ptrPt.PointerId))
             {
-                pointers[ptrPt.PointerId] = null;
-                pointers.Remove(ptrPt.PointerId);
+                touchIds.Remove(ptrPt.PointerId);
             }
         }
 
-        public PPITouchPointOval GetTouchOval(PointerPoint ptrPt)
+        public PPITouchPointOval GetTouchOval(PointerPoint ptrPt, String type)
         {
             if (ptrPt.PointerDevice.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Touch)
             {
                 return null;
             }
+            uint id = ptrPt.PointerId;
             double x = ptrPt.Position.X;
             double y = ptrPt.Position.Y;
             double angle = ptrPt.Properties.Orientation;
@@ -157,7 +159,7 @@ namespace PPI
                 majorAxis = minorAxis;
                 minorAxis = tmp;
             }
-            PPITouchPointOval oval = new PPITouchPointOval(x, y, angle, majorAxis, minorAxis, time);
+            PPITouchPointOval oval = new PPITouchPointOval(id, x, y, angle, majorAxis, minorAxis, time, type);
             return oval;
         }
 

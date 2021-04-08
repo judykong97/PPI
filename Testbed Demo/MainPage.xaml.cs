@@ -35,8 +35,8 @@ namespace Testbed_Demo
             handler.onTouchDown(e);
             // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
-            DrawEllipse(handler.GetTouchOval(ptrPt));
-            CreateInfoPop(handler.GetTouchOval(ptrPt), ptrPt);
+            DrawEllipse(handler.GetTouchOval(ptrPt, "Down"));
+            CreateInfoPop(handler.GetTouchOval(ptrPt, "Down"), ptrPt);
         }
 
 
@@ -45,8 +45,8 @@ namespace Testbed_Demo
             handler.onTouchMove(e);
             // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
-            DrawEllipse(handler.GetTouchOval(ptrPt));
-            UpdateInfoPop(handler.GetTouchOval(ptrPt), ptrPt);
+            DrawEllipse(handler.GetTouchOval(ptrPt, "Move"));
+            UpdateInfoPop(handler.GetTouchOval(ptrPt, "Move"), ptrPt);
         }
 
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
@@ -88,7 +88,6 @@ namespace Testbed_Demo
             pointerDetails.Name = ptrPt.PointerId.ToString();
             pointerDetails.Foreground = new SolidColorBrush(Windows.UI.Colors.Blue);
             pointerDetails.Text = handler.GetTouchDataDisplay(oval, ptrPt);
-
             TranslateTransform x = new TranslateTransform();
             x.X = ptrPt.Position.X + 20;
             x.Y = ptrPt.Position.Y + 20;
