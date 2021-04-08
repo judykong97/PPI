@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="Testbed_Demo.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Testbed_Demo"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Canvas x:ConnectionId='2' Name="Container" 
+                Grid.Column="0"
+                Grid.Row="1"
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" 
+                Margin="0,0" 
+                Height="1000"  Width="1500">
+            <Rectangle x:ConnectionId='3' Name="Target" 
+                       Fill="Transparent"
+                       HorizontalAlignment="Stretch" 
+                       VerticalAlignment="Stretch" 
+                       Margin="0,0"
+                       Height="1000" Width="1500" Canvas.Left="0" />
+        </Canvas>
+    </Grid>
+</Page>
+
