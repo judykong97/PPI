@@ -59,7 +59,6 @@ namespace Testbed_Demo
 
         protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
         {
-            handler.onTouchUp(e);
             // DEBUG
             PointerPoint ptrPt = e.GetCurrentPoint(this);
             DestroyInfoPop(ptrPt);
