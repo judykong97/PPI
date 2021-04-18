@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Numerics;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 namespace PPI
 {
@@ -21,6 +18,7 @@ namespace PPI
         public double ContactArea; // Calculated from major and minor axes
         public long Time;
         public String Type;
+        public String DebugInfo;
 
         public PPITouchOval(uint id, double x, double y, double angle, double majorAxis, double minorAxis, long time, String type)
         {
@@ -33,15 +31,13 @@ namespace PPI
             this.ContactArea = Math.PI * majorAxis * minorAxis / 4.0;
             this.Time = time;
             this.Type = type;
+            this.DebugInfo = "";
         }
     }
 
     public class PPITouchDisplay
     {
         Page _page = null;
-        Canvas _canvas = null;
-
-        public bool DEBUG = true;
 
         public event PPITouchHandler PPITouchDown;
         public event PPITouchHandler PPITouchMove;
@@ -55,15 +51,13 @@ namespace PPI
         private int MAJORAXIS_USAGEID = 73;
         private int MINORAXIS_USAGEID = 72;
 
-        public PPITouchDisplay(Page page, Canvas canvas, bool debug)
+        public PPITouchDisplay(Page page)
         {
             page.PointerPressed += new PointerEventHandler(onTouchDown);
             page.PointerMoved += new PointerEventHandler(onTouchMove);
             page.PointerReleased += new PointerEventHandler(onTouchUp);
             page.PointerCaptureLost += new PointerEventHandler(onTouchUp);
             _page = page;
-            _canvas = canvas;
-            DEBUG = debug;
         }
 
         public void onTouchDown(Object sender, PointerRoutedEventArgs e)
@@ -73,11 +67,6 @@ namespace PPI
             PPITouchOval oval = GetTouchOval(ptrPt, "Down");
             // Invoke custom touch down function written by end user
             PPITouchDown?.Invoke(oval);
-            if (DEBUG)
-            {
-                DrawEllipse(oval);
-                CreateInfoPop(oval, ptrPt);
-            }
         }
 
         public void onTouchMove(Object sender, PointerRoutedEventArgs e)
@@ -87,11 +76,6 @@ namespace PPI
             PPITouchOval oval = GetTouchOval(ptrPt, "Move");
             // Invoke custom touch move function written by end user
             PPITouchMove?.Invoke(oval);
-            if (DEBUG)
-            {
-                DrawEllipse(oval);
-                UpdateInfoPop(oval, ptrPt);
-            }
         }
 
         public void onTouchUp(Object sender, PointerRoutedEventArgs e)
@@ -101,21 +85,16 @@ namespace PPI
             PPITouchOval oval = GetTouchOval(ptrPt, "Up");
             // Invoke custom touch up function written by end user
             PPITouchUp?.Invoke(oval);
-            if (DEBUG)
-            {
-                DrawEllipse(oval);
-                DestroyInfoPop(ptrPt);
-            }
         }
 
         // This seems right, but again I didn't find any useful documentation on it
         // and the "5" was a random value of my guess based on pattern matching
-        private double UnitToPixel(double val)
+        public double UnitToPixel(double val)
         {
             return val / 5 * SCREENWIDTH_PX / SCREENWIDTH_MM;
         }
 
-        private double PixelToMM(double val)
+        public double PixelToMM(double val)
         {
             return val * SCREENWIDTH_MM / SCREENWIDTH_PX;
         }
@@ -159,10 +138,12 @@ namespace PPI
                 minorAxis = tmp;
             }
             PPITouchOval oval = new PPITouchOval(id, x, y, angle, majorAxis, minorAxis, time, type);
+            String detail = GetDebugInfo(oval, ptrPt);
+            oval.DebugInfo = detail;
             return oval;
         }
 
-        private String GetTouchDataDisplay(PPITouchOval oval, PointerPoint ptrPt)
+        private String GetDebugInfo(PPITouchOval oval, PointerPoint ptrPt)
         {
             if (oval == null) { return ""; }
             String details = "";
@@ -198,71 +179,6 @@ namespace PPI
                     break;
             }
             return details;
-        }
-
-        private void DrawEllipse(PPITouchOval oval)
-        {
-            if (oval == null) { return; }
-            var ellipse = new Ellipse();
-            ellipse.Stroke = new SolidColorBrush(Windows.UI.Colors.SteelBlue);
-            ellipse.StrokeThickness = 1;
-            ellipse.Width = oval.MajorAxis;
-            ellipse.Height = oval.MinorAxis;
-            ellipse.Rotation = (float)(-oval.Angle);
-            ellipse.Translation = new Vector3(
-                (float)(oval.CenterX - oval.MajorAxis / 2),
-                (float)(oval.CenterY - oval.MinorAxis / 2), 0);
-            _canvas.Children.Add(ellipse);
-        }
-
-        private void CreateInfoPop(PPITouchOval oval, PointerPoint ptrPt)
-        {
-            TextBlock pointerDetails = new TextBlock();
-            pointerDetails.Name = ptrPt.PointerId.ToString();
-            pointerDetails.Foreground = new SolidColorBrush(Windows.UI.Colors.Blue);
-            pointerDetails.Text = GetTouchDataDisplay(oval, ptrPt);
-            TranslateTransform x = new TranslateTransform();
-            x.X = ptrPt.Position.X + 20;
-            x.Y = ptrPt.Position.Y + 20;
-            pointerDetails.RenderTransform = x;
-            _canvas.Children.Add(pointerDetails);
-        }
-
-        private void UpdateInfoPop(PPITouchOval oval, PointerPoint ptrPt)
-        {
-            foreach (var pointerDetails in _canvas.Children)
-            {
-                if (pointerDetails.GetType().ToString() == "Windows.UI.Xaml.Controls.TextBlock")
-                {
-                    TextBlock textBlock = (TextBlock)pointerDetails;
-                    if (textBlock.Name == ptrPt.PointerId.ToString())
-                    {
-                        // To get pointer location details, we need extended pointer info.
-                        // We get the pointer info through the getCurrentPoint method
-                        // of the event argument. 
-                        TranslateTransform x = new TranslateTransform();
-                        x.X = ptrPt.Position.X + 20;
-                        x.Y = ptrPt.Position.Y + 20;
-                        pointerDetails.RenderTransform = x;
-                        textBlock.Text = GetTouchDataDisplay(oval, ptrPt);
-                    }
-                }
-            }
-        }
-
-        private void DestroyInfoPop(PointerPoint ptrPt)
-        {
-            foreach (var pointerDetails in _canvas.Children)
-            {
-                if (pointerDetails.GetType().ToString() == "Windows.UI.Xaml.Controls.TextBlock")
-                {
-                    TextBlock textBlock = (TextBlock)pointerDetails;
-                    if (textBlock.Name == ptrPt.PointerId.ToString())
-                    {
-                        _canvas.Children.Remove(pointerDetails);
-                    }
-                }
-            }
         }
     }
 }
