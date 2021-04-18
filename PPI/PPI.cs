@@ -60,27 +60,24 @@ namespace PPI
             _page = page;
         }
 
-        public void onTouchDown(Object sender, PointerRoutedEventArgs e)
+        private void onTouchDown(Object sender, PointerRoutedEventArgs e)
         {
-            // Handle touch point to get touch oval information
             PointerPoint ptrPt = e.GetCurrentPoint(_page);
             PPITouchOval oval = GetTouchOval(ptrPt, "Down");
             // Invoke custom touch down function written by end user
             PPITouchDown?.Invoke(oval);
         }
 
-        public void onTouchMove(Object sender, PointerRoutedEventArgs e)
+        private void onTouchMove(Object sender, PointerRoutedEventArgs e)
         {
-            // Handle touch point to get touch oval information
             PointerPoint ptrPt = e.GetCurrentPoint(_page);
             PPITouchOval oval = GetTouchOval(ptrPt, "Move");
             // Invoke custom touch move function written by end user
             PPITouchMove?.Invoke(oval);
         }
 
-        public void onTouchUp(Object sender, PointerRoutedEventArgs e)
+        private void onTouchUp(Object sender, PointerRoutedEventArgs e)
         {
-            // Handle touch point to get touch oval information
             PointerPoint ptrPt = e.GetCurrentPoint(_page);
             PPITouchOval oval = GetTouchOval(ptrPt, "Up");
             // Invoke custom touch up function written by end user
@@ -89,12 +86,12 @@ namespace PPI
 
         // This seems right, but again I didn't find any useful documentation on it
         // and the "5" was a random value of my guess based on pattern matching
-        public double UnitToPixel(double val)
+        private double UnitToPixel(double val)
         {
             return val / 5 * SCREENWIDTH_PX / SCREENWIDTH_MM;
         }
 
-        public double PixelToMM(double val)
+        private double PixelToMM(double val)
         {
             return val * SCREENWIDTH_MM / SCREENWIDTH_PX;
         }
