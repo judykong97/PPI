@@ -71,8 +71,8 @@ namespace PPI
             // Handle touch point to get touch oval information
             PointerPoint ptrPt = e.GetCurrentPoint(_page);
             PPITouchOval oval = GetTouchOval(ptrPt, "Down");
-            PPITouchDown?.Invoke(oval);
             // Invoke custom touch down function written by end user
+            PPITouchDown?.Invoke(oval);
             if (DEBUG)
             {
                 DrawEllipse(oval);

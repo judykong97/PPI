@@ -12,7 +12,6 @@ namespace Testbed_Demo
 {
     public sealed partial class MainPage : Page
     {
-
         private PPITouchDisplay _ppi;
 
         public MainPage()
@@ -40,6 +39,5 @@ namespace Testbed_Demo
         {
             return;
         }
-        
     }
 }
